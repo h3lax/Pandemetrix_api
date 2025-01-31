@@ -1,45 +1,34 @@
-import os
-
 from flask import Flask
-from app.db import get_db, close_db
+from config import Config
+from app.db import db
+from flask_migrate import Migrate
+from app.routes import register_routes
 
 
-def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
-    )
+def create_app(config_class=Config):
+    """Flask application factory pattern."""
+    app = Flask(__name__)
+    app.config.from_object(config_class) # We using the config.py
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    # Initialize extensions
+    db.init_app(app)
+    migrate = Migrate(app, db)
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    # Register blueprints (routes)
+    register_routes(app)
 
-    # a simple page that says hello
+    # hello route
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
-    
-    @app.teardown_appcontext
-    def teardown_db(exception):
-        close_db(exception)
 
-    @app.route('/test-db')
+    
+    """ @app.route('/test-db')
     def test_db():
         db = get_db()
         with db.cursor() as cursor:
             cursor.execute('SELECT NOW();')
             result = cursor.fetchone()
-        return {'current_time': result['now']}
+        return {'current_time': result['now']} """
 
     return app

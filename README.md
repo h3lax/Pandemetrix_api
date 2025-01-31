@@ -1,9 +1,13 @@
 # starting the python environment
 
-
 ## Dans le repertoire api créer l'environnement python:
 ```bash
 python3 -m venv .venv
+```
+
+## Install packages
+```bash
+pip install -r requirements.txt 
 ```
 
 ## Puis l'activer
@@ -11,10 +15,9 @@ python3 -m venv .venv
 . .venv/bin/activate
 ```
 
-## Mettre Flask à jour / installer
-
+* penser à quitter l'environement une fois terminé qui prend des ressources pour rien *
 ```bash
-pip install Flask
+deactivate
 ```
 
 ## Lancer les containers du docker compose
@@ -29,6 +32,23 @@ docker-compose up -d
 flask --app app run --debug
 ```
 
-## Tester la conection à la DB
+## Tester
 
-http://127.0.0.1:5000/test-db
+[app](http://127.0.0.1:5000/api/health)
+[db](http://127.0.0.1:5000/api/db-check)
+
+## Inspecter la db
+
+```bash
+docker exec -it <postgres_container_name> psql -U metabase -d metabase
+```
+
+## Commandes Postgres
+```sql
+\dt
+```
+
+## Migrations
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade

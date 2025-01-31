@@ -1,5 +1,8 @@
 .venv/
 
+app/data/bronze/
+app/data/silver/
+
 *.pyc
 __pycache__/
 
