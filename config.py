@@ -2,7 +2,7 @@ class Config:
     """Base configuration for the application."""
 
     SECRET_KEY = "my_secret_key"  # You can keep this for Flask sessions if needed
-    SQLALCHEMY_DATABASE_URI = "postgresql://metabase:metabase_password@localhost:5431/metabase"
+    SQLALCHEMY_DATABASE_URI = "postgresql://flask:flask_password@localhost:5432/flask_db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True  # Set to False in production
 

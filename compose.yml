@@ -1,7 +1,25 @@
 services:
-  metabase_pg:
+  postgresql_flask:
+      image: postgres:latest
+      container_name: postgresql_flask
+      restart: unless-stopped
+      ports:
+        - '5432:5432'
+      environment:
+        - POSTGRES_USER=flask
+        - POSTGRES_PASSWORD=flask_password
+        - POSTGRES_DB=flask_db
+      volumes:
+        - postgresql-flask-data:/var/lib/postgresql/data
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U flask_user"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+  metabase:
     image: metabase/metabase:latest
-    container_name: metabase_pg
+    container_name: metabase
     restart: unless-stopped
     ports:
       - '3030:3000'
@@ -11,23 +29,23 @@ services:
       - MB_DB_PORT=5432  # Changé de 5434 à 5432
       - MB_DB_USER=metabase
       - MB_DB_PASS=metabase_password
-      - MB_DB_HOST=postgresql  # Utilise le nom du service docker
+      - MB_DB_HOST=postgresql_metabase  # Utilise le nom du service docker
       - JAVA_TIMEZONE=Europe/Paris
     depends_on:
-      - postgresql
+      - postgresql_metabase
 
-  postgresql:
+  postgresql_metabase:
     image: postgres:latest
-    container_name: metabase_postgresql
+    container_name: postgresql_metabase
     restart: unless-stopped
     ports:
       - '5431:5432'  # Port externe 5434, interne toujours 5432
     environment:
       - POSTGRES_USER=metabase
       - POSTGRES_PASSWORD=metabase_password
-      - POSTGRES_DB=metabase
+      - POSTGRES_DB=metabase_db
     volumes:
-      - postgresql-data:/var/lib/postgresql/data
+      - postgresql-metabase-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U metabase"]
       interval: 10s
@@ -35,4 +53,5 @@ services:
       retries: 5
 
 volumes:
-  postgresql-data:
+  postgresql-metabase-data:
+  postgresql-flask-data:

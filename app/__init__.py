@@ -4,6 +4,9 @@ from app.db import db
 from flask_migrate import Migrate
 from app.routes import register_routes
 
+# Import models
+from app import models
+
 
 def create_app(config_class=Config):
     """Flask application factory pattern."""

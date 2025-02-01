@@ -34,8 +34,9 @@ flask --app app run --debug
 
 ## Tester
 
-[app](http://127.0.0.1:5000/api/health)
-[db](http://127.0.0.1:5000/api/db-check)
+[ app-status ](http://127.0.0.1:5000/api/health)
+
+[ db-status ](http://127.0.0.1:5000/api/db-check)
 
 ## Inspecter la db
 
@@ -48,7 +49,18 @@ docker exec -it <postgres_container_name> psql -U metabase -d metabase
 \dt
 ```
 
+## Stop/Reset la db
+```bash
+docker-compose down -v
+```
+
 ## Migrations
+```bash
 flask db init
+```
+```bash
 flask db migrate -m "Initial migration"
+```
+```bash
 flask db upgrade
+```
