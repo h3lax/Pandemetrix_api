@@ -1,16 +1,33 @@
 services:
-  postgresql_flask:
+  postgresql_raw:
       image: postgres:latest
-      container_name: postgresql_flask
+      container_name: postgresql_raw
+      restart: unless-stopped
+      ports:
+        - '5433:5432'
+      environment:
+        - POSTGRES_USER=raw_user
+        - POSTGRES_PASSWORD=raw_password
+        - POSTGRES_DB=raw_db
+      volumes:
+        - postgresql-raw-data:/var/lib/postgresql/data
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U flask_user"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+  postgresql_api:
+      image: postgres:latest
+      container_name: postgresql_api
       restart: unless-stopped
       ports:
         - '5432:5432'
       environment:
-        - POSTGRES_USER=flask
-        - POSTGRES_PASSWORD=flask_password
-        - POSTGRES_DB=flask_db
+        - POSTGRES_USER=api_user
+        - POSTGRES_PASSWORD=api_password
+        - POSTGRES_DB=api_db
       volumes:
-        - postgresql-flask-data:/var/lib/postgresql/data
+        - postgresql-api-data:/var/lib/postgresql/data
       healthcheck:
         test: ["CMD-SHELL", "pg_isready -U flask_user"]
         interval: 10s
@@ -54,4 +71,5 @@ services:
 
 volumes:
   postgresql-metabase-data:
-  postgresql-flask-data:
+  postgresql-api-data:
+  postgresql-raw-data:

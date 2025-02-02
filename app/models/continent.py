@@ -10,3 +10,9 @@ class Continent(db.Model):
     
     pays = relationship("Pays", back_populates="continent")
     regions = relationship("Region", secondary="concerne", back_populates="continents")
+
+    def to_dict(self):
+        return {
+            'code_continent': self.code_continent,
+            'nom': self.nom
+        }

@@ -34,9 +34,9 @@ flask --app app run --debug
 
 ## Tester
 
-[ app-status ](http://127.0.0.1:5000/api/health)
+[ app-status ]:(http://127.0.0.1:5000/api/health)
 
-[ db-status ](http://127.0.0.1:5000/api/db-check)
+[ db-status ]:(http://127.0.0.1:5000/api/db-check)
 
 ## Inspecter la db
 
@@ -64,3 +64,7 @@ flask db migrate -m "Initial migration"
 ```bash
 flask db upgrade
 ```
+
+## Accéder à metabase
+
+[metabase]:(http://127.0.0.1:3030/)
