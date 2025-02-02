@@ -73,3 +73,5 @@ volumes:
   postgresql-metabase-data:
   postgresql-api-data:
   postgresql-raw-data:
+
+#TODO: Ajouter les services Flask + variables d'environnement

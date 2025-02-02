@@ -1,0 +1,4 @@
+queries:
+  small_test: "SELECT id, reference, created_at FROM ??? LIMIT 10;"
+  full_data: "SELECT * FROM ???;"
+  recent_projects: "SELECT * FROM ??? WHERE created_at > NOW() - INTERVAL 30 DAY;"

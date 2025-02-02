@@ -1,6 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
+# PENSER A AVOIR LE REPERTOIRE DATA/BRONZE DANS LE DOSSIER APP & AUSSI LE FICHIER CSV
 # Database connection
 engine = create_engine('postgresql://raw_user:raw_password@localhost:5433/raw_db')
 
