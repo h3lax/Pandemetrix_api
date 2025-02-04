@@ -5,19 +5,18 @@
 python3 -m venv .venv
 ```
 
-## Install packages
-```bash
-pip install -r requirements.txt 
-```
-
 ## Puis l'activer
 ```bash
 . .venv/bin/activate
 ```
-
 * penser à quitter l'environement une fois terminé qui prend des ressources pour rien *
 ```bash
 deactivate
+```
+
+## Install packages
+```bash
+pip install -r requirements.txt 
 ```
 
 ## Lancer les containers du docker compose
@@ -34,9 +33,9 @@ flask --app app run --debug
 
 ## Tester
 
-[ app-status ]:(http://127.0.0.1:5000/api/health)
+[ app-status ](http://127.0.0.1:5000/api/health)
 
-[ db-status ]:(http://127.0.0.1:5000/api/db-check)
+[ db-status ](http://127.0.0.1:5000/api/db-check)
 
 ## Inspecter la db
 
@@ -67,4 +66,4 @@ flask db upgrade
 
 ## Accéder à metabase
 
-[metabase]:(http://127.0.0.1:3030/)
+[metabase](http://127.0.0.1:3030/)
