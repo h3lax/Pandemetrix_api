@@ -3,7 +3,7 @@ from psycopg2 import connect, sql
 def get_connection(config):
     return connect(
         host=config['host'],
-        port=config.get('port', 5433),
+        port=config.get('port', 5432),
         user=config.get('username'),
         password=config.get('password'),
         dbname=config['database']

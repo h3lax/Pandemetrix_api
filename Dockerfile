@@ -1,20 +1,21 @@
-# Dockerfile (identique)
 FROM python:3.9-slim
 
-WORKDIR /app
+WORKDIR /api
 
-# Copier le fichier requirements.txt
-COPY ./requirements.txt /app/requirements.txt
+# Copy the requirements file
+COPY ./requirements.txt /api/requirements.txt
 
-# Mettre à jour pip et installer les dépendances
+# Update pip and install dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /api/requirements.txt
 
-# Copier le script Python
-COPY ./display_app.py /app/display_app.py
+# Copy the application code
+COPY . /api
 
-# Commande pour lancer le script Python
-CMD ["python", "/app/display_app.py"]
+# Set environment variables for Flask
+ENV FLASK_APP=app
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5000
 
-# docker build -t plotly_img .
-# docker run -h localhost -p 9008:9000 -d --name plotly_container plotly_img
+# Command to run the Flask application
+CMD ["flask", "run", "--debug"]

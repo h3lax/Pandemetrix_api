@@ -6,10 +6,11 @@ mariadb_config = {
 }
 
 postgres_raw_config = {
-    'host': 'localhost',
+    'host': 'postgresql_raw',
     'database': 'raw_db',
     'username': 'raw_user',
-    'password': 'raw_password'
+    'password': 'raw_password',
+    'port': '5432'
 }
 
 # TODO: Automatiser les config en créant des variables d'env dans le docker-compose

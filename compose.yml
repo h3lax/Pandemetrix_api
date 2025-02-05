@@ -1,4 +1,24 @@
 services:
+  api:
+    build: .
+    container_name: pandemetrix_api
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    environment:
+      - POSTGRES_RAW_HOST=postgresql_raw
+      - POSTGRES_RAW_DB=raw_db
+      - POSTGRES_RAW_USER=raw_user
+      - POSTGRES_RAW_PASSWORD=raw_password
+      - POSTGRES_API_HOST=postgresql_api
+      - POSTGRES_API_DB=api_db
+      - POSTGRES_API_USER=api_user
+      - POSTGRES_API_PASSWORD=api_password
+    volumes:
+      - ./:/api # responsive to changes in the api directory
+    depends_on:
+      - postgresql_raw
+      - postgresql_api
   postgresql_raw:
       image: postgres:latest
       container_name: postgresql_raw
