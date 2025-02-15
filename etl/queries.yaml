@@ -1,0 +1,8 @@
+queries:
+  small_test: "SELECT id, reference, created_at FROM ??? LIMIT 10;"
+  full_data: "SELECT * FROM ???;"
+  recent_projects: "SELECT * FROM ??? WHERE created_at > NOW() - INTERVAL 30 DAY;"
+
+urls:
+  OMS_Daily: "https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-daily-data.csv" # WHO COVID-19 global daily data
+  recent_data: "http://example.com/recent_data.csv"
