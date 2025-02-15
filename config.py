@@ -1,10 +1,26 @@
 class Config:
     """Base configuration for the application."""
 
-    SECRET_KEY = "my_secret_key"  # You can keep this for Flask sessions if needed
+    SECRET_KEY = "my_secret_key"
     SQLALCHEMY_DATABASE_URI = "postgresql://api_user:api_password@postgresql_api:5432/api_db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = True  # Set to False in production
+    DEBUG = True
+
+    POSTGRES_RAW_CONFIG = {
+        'host': 'postgresql_raw',
+        'database': 'raw_db',
+        'username': 'raw_user',
+        'password': 'raw_password',
+        'port': '5432'
+    }
+
+    POSTGRES_API_CONFIG = {
+        'host': 'postgresql_api',
+        'database': 'api_db',
+        'username': 'api_user',
+        'password': 'api_password',
+        'port': '5432'
+    }
 
 class DevelopmentConfig(Config):
     """Development-specific configuration."""

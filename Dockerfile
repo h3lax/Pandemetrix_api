@@ -17,5 +17,8 @@ ENV FLASK_APP=app
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5000
 
+# Set PYTHONPATH to include the root directory
+ENV PYTHONPATH=/api
+
 # Command to run the Flask application
 CMD ["flask", "run", "--debug"]
