@@ -5,9 +5,9 @@ from app.db import db
 class Concerne(db.Model):
     __tablename__ = 'concerne'
     
-    code_continent = Column(Integer, ForeignKey('continent.code_continent', ondelete='CASCADE'), primary_key=True, nullable=False)
-    code_pays = Column(Integer, ForeignKey('pays.code_pays', ondelete='CASCADE'), primary_key=True, nullable=False)
-    code_region = Column(Integer, ForeignKey('region.code_region', ondelete='CASCADE'), primary_key=True, nullable=False)
+    code_continent = Column(String, ForeignKey('continent.code_continent', ondelete='CASCADE'), primary_key=True, nullable=False)
+    code_pays = Column(String, ForeignKey('pays.code_pays', ondelete='CASCADE'), primary_key=True, nullable=False)
+    code_region = Column(String, ForeignKey('region.code_region', ondelete='CASCADE'), primary_key=True, nullable=False)
     code_rapport = Column(Integer, ForeignKey('rapport.code_rapport', ondelete='CASCADE'), primary_key=True, nullable=False)
 
     continent = relationship('Continent', backref='concernes')
