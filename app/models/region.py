@@ -8,7 +8,7 @@ class Region(db.Model):
     id_region = Column(Integer, primary_key=True)
     code_region = Column(String(50), unique=True, nullable=False)
     nom = Column(String(50), nullable=False)
-    code_pays = Column(Integer, ForeignKey('pays.code_pays', ondelete='CASCADE'), nullable=False)
+    code_pays = Column(String, ForeignKey('pays.code_pays', ondelete='CASCADE'), nullable=False)
     pays = relationship('Pays', back_populates='regions')
 
     def to_dict(self):

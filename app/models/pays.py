@@ -5,12 +5,12 @@ from app.db import db
 class Pays(db.Model):
     __tablename__ = 'pays'
     
-    id_pays = Column(Integer, primary_key=True)
+    id_pays = Column(String, primary_key=True)
     code_pays = Column(String(50), unique=True, nullable=False)
     nom = Column(String(50), nullable=False)
     pib = Column(Integer)
     temperature = Column(DECIMAL(15, 2))  # Added precision
-    code_continent = Column(Integer, ForeignKey('continent.code_continent', ondelete='CASCADE'), nullable=False)
+    code_continent = Column(String, ForeignKey('continent.code_continent', ondelete='CASCADE'), nullable=False)
     continent = relationship('Continent', back_populates='pays')
     regions = relationship('Region', back_populates='pays', cascade='all, delete-orphan')
 
