@@ -1,0 +1,35 @@
+datasets:
+  covid19:
+    input_file: "WHO-COVID-19-global-daily-data.csv"
+    output_file: "cleaned_covid19.csv"
+    columns_to_keep: ["Date_reported", "Country", "New_cases", "New_deaths", "WHO_region", "Country_code"]
+    rename_columns:
+      Date_reported: "date_debut"
+      New_cases: "nouveaux_cas"
+      New_deaths: "nouveaux_deces"
+      Country: "pays"
+      Country_code: "code_pays"
+      WHO_region: "region_oms"
+    data_types:
+      Date_reported: "string"
+      Country: "str"
+      New_cases: "int"
+      New_deaths: "int"
+    remove_duplicates: true
+    remove_na: true
+
+
+  # monkeypox:
+    # input_file: "monkeypox.csv"
+    # output_file: "cleaned_monkeypox.csv"
+    # columns_to_keep: ["Date", "New_cases", "Location"]
+    # rename_columns:
+    #   Date: "date"
+    #   New_cases: "cases"
+    #   Location: "country"
+    # data_types:
+    #   date: "datetime"
+    #   cases: "int"
+    #   country: "str"
+    # remove_duplicates: true
+    # remove_na: true
