@@ -1,46 +1,61 @@
-from app.models.pays import Pays
-from app.db import db
-from sqlalchemy.orm import Session
-from typing import List, Optional
-from app import models
+from app.models import Pays
 
 class PaysRepository:
-    
-    def create(self, code_pays: str, nom: str, pib: int, temperature: float, code_continent: int) -> models.Pays:
-        pays = models.Pays(
+    """Repository for managing Pays data"""
+
+    def __init__(self, db_session):
+        self.db_session = db_session
+
+    def get_all(self):
+        """Retrieve all countries"""
+        return self.db_session.query(Pays).all()
+
+    def get_by_id(self, id):
+        """Retrieve a country by its ID"""
+        return self.db_session.query(Pays).filter_by(id=id).first()
+
+    def get_by_code(self, code_pays):
+        """Retrieve a country by its code"""
+        return self.db_session.query(Pays).filter_by(code_pays=code_pays).first()
+
+    def get_by_continent(self, code_continent):
+        """Retrieve countries by continent code"""
+        return self.db_session.query(Pays).filter_by(code_continent=code_continent).all()
+
+    def create(self, code_pays, nom, pib=None, temperature=None, code_continent=None):
+        """Create a new country"""
+        new_pays = Pays(
             code_pays=code_pays,
             nom=nom,
             pib=pib,
             temperature=temperature,
             code_continent=code_continent
         )
-        self.db.add(pays)
-        self.db.commit()
-        self.db.refresh(pays)
-        return pays
+        self.db_session.add(new_pays)
+        self.db_session.commit()
+        self.db_session.refresh(new_pays)
+        return new_pays
 
-    def get_by_id(self, id_pays: int) -> Optional[models.Pays]:
-        return self.db.query(models.Pays).filter(models.Pays.id_pays == id_pays).first()
+    def update(self, id, **data):
+        """Update an existing country"""
+        pays = self.get_by_id(id)
+        if not pays:
+            return None
 
-    def get_by_code(self, code_pays: str) -> Optional[models.Pays]:
-        return self.db.query(models.Pays).filter(models.Pays.code_pays == code_pays).first()
-
-    def get_all(self) -> List[models.Pays]:
-        return self.db.query(models.Pays).all()
-
-    def update(self, id_pays: int, **kwargs) -> Optional[models.Pays]:
-        pays = self.get_by_id(id_pays)
-        if pays:
-            for key, value in kwargs.items():
+        # Vérifier et mettre à jour uniquement les champs fournis
+        allowed_fields = {"code_pays", "nom", "pib", "temperature", "code_continent"}
+        for key, value in data.items():
+            if key in allowed_fields and value is not None:
                 setattr(pays, key, value)
-            self.db.commit()
-            self.db.refresh(pays)
+
+        self.db_session.commit()
         return pays
 
-    def delete(self, id_pays: int) -> bool:
-        pays = self.get_by_id(id_pays)
-        if pays:
-            self.db.delete(pays)
-            self.db.commit()
-            return True
-        return False
+    def delete(self, id):
+        """Delete a country by ID"""
+        pays = self.get_by_id(id)
+        if not pays:
+            return False
+        self.db_session.delete(pays)
+        self.db_session.commit()
+        return True
