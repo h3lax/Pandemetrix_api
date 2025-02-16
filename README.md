@@ -67,3 +67,7 @@ flask db upgrade
 ## Accéder à metabase
 
 [metabase](http://127.0.0.1:3030/)
+
+## Swagger Url
+
+[Swagger](http://127.0.0.1:5000/api/swagger)

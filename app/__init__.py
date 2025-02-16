@@ -14,7 +14,7 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     db.init_app(app)
-    migrate = Migrate(app, db)
+    migrate = Migrate(app, db) # TODO: What is this? Not sure it's needed nor in use
 
     # Register blueprints (routes)
     register_routes(app)

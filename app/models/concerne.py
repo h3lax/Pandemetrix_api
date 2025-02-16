@@ -8,7 +8,7 @@ class Concerne(db.Model):
     code_continent = Column(String, ForeignKey('continent.code_continent', ondelete='CASCADE'), primary_key=True, nullable=False)
     code_pays = Column(String, ForeignKey('pays.code_pays', ondelete='CASCADE'), primary_key=True, nullable=False)
     code_region = Column(String, ForeignKey('region.code_region', ondelete='CASCADE'), primary_key=True, nullable=False)
-    code_rapport = Column(Integer, ForeignKey('rapport.code_rapport', ondelete='CASCADE'), primary_key=True, nullable=False)
+    code_rapport = Column(Integer, ForeignKey('rapport.id', ondelete='CASCADE'), primary_key=True, nullable=False)
 
     continent = relationship('Continent', backref='concernes')
     pays = relationship('Pays', backref='concernes')
