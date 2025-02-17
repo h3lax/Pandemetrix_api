@@ -14,25 +14,28 @@ def apply_transformations(df: pd.DataFrame, transformations):
     # Sélection des colonnes à garder
     if "columns_to_keep" in transformations:
         df = df[transformations["columns_to_keep"]]
-
-    # Conversion des types de données
-    if "data_types" in transformations:
-        for col, dtype in transformations["data_types"].items():
-            if dtype == "datetime":
-                df[col] = pd.to_datetime(df[col], errors='coerce')
-            elif dtype == "int":
-                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
-            elif dtype == "float":
-                df[col] = pd.to_numeric(df[col], errors='coerce')
-            elif dtype == "str":
-                df[col] = df[col].astype(str)
     
     # Renommage des colonnes
     if "rename_columns" in transformations:
         df = df.rename(columns=transformations["rename_columns"])
 
-    df.replace(["", "NaN", "None"], np.nan, inplace=True)
     df = df.dropna(subset=['nouveaux_cas', 'nouveaux_deces'], how='all')
+
+    # Conversion des types de données
+    if "data_types" in transformations:
+        for col, dtype in transformations["data_types"].items():
+            if dtype == "datetime":
+                df.loc[:, col] = pd.to_datetime(df[col], errors='coerce')
+            elif dtype == "int":
+                df.loc[:, col] = df[col].fillna(0).astype(int)
+            elif dtype == "float":
+                df.loc[:, col] = pd.to_numeric(df[col], errors='coerce')
+            elif dtype == "str":
+                df.loc[:, col] = df[col].astype(str)
+
+    # Filtrage des données 
+    df = df.loc[~((df['nouveaux_cas'] == 0) & (df['nouveaux_deces'] == 0))]
+    df = df.loc[~((df['nouveaux_cas'] < 0) | (df['nouveaux_deces'] < 0))]
 
     # Suppression des doublons
     if transformations.get("remove_duplicates", False):
@@ -62,7 +65,3 @@ def transform_data(file_key):
     df.to_csv(output_path, index=False)
     
     print(f"Transformation terminée pour {file_key}. Fichier sauvegardé : {output_path}")
-
-# if __name__ == "__main__":
-#     for file_key in CONFIG["files"]:
-#         transform_data(file_key)

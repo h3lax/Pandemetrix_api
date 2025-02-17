@@ -1,6 +1,6 @@
 datasets:
   covid19:
-    input_file: "WHO-COVID-19-global-daily-data.csv"
+    input_base: "covid19"
     output_file: "cleaned_covid19.csv"
     columns_to_keep: ["Date_reported", "Country", "New_cases", "New_deaths", "WHO_region", "Country_code"]
     rename_columns:
@@ -11,10 +11,10 @@ datasets:
       Country_code: "code_pays"
       WHO_region: "region_oms"
     data_types:
-      Date_reported: "string"
-      Country: "str"
-      New_cases: "int"
-      New_deaths: "int"
+      date_debut: "datetime"
+      pays: "str"
+      nouveaux_cas: "int"
+      nouveaux_deces: "int"
     remove_duplicates: true
     remove_na: true
 
