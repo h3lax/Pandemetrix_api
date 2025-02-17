@@ -1,48 +1,68 @@
 # app/routes/periode_routes.py
-from flask import Blueprint, request, jsonify
+from flask_restx import Namespace, Resource, fields
+from flask import request
 from app.db import db
-from app.repositories import PeriodeRepository
+from app.repositories.periode_repo import PeriodeRepository
 
-periode_bp = Blueprint('periodes', __name__, url_prefix='/periodes')
+# Define Namespace
+periode_api = Namespace("periode", description="Periode related operations")
 
-@periode_bp.route('/', methods=['POST'])
-def create_periode():
-    data = request.get_json()
-    db = get_db()
-    repo = PeriodeRepository(db)
-    periode = repo.create(nom=data['nom'])
-    return jsonify(periode.to_dict()), 201
+# Define request/response models for Swagger
+periode_model = periode_api.model("Periode", {
+    "id": fields.Integer(description="Periode ID"),
+    "nom": fields.String(required=True, description="Periode Name"),
+})
 
-@periode_bp.route('/', methods=['GET'])
-def get_periodes():
-    db = get_db()
-    repo = PeriodeRepository(db)
-    periodes = repo.get_all()
-    return jsonify([p.to_dict() for p in periodes])
+periode_create_model = periode_api.model("PeriodeCreate", {
+    "nom": fields.String(required=True, description="Periode Name"),
+})
 
-@periode_bp.route('/<int:code_periode>', methods=['GET'])
-def get_periode(code_periode):
-    db = get_db()
-    repo = PeriodeRepository(db)
-    periode = repo.get_by_id(code_periode)
-    if not periode:
-        return {'detail': 'Periode not found'}, 404
-    return jsonify(periode.to_dict())
+@periode_api.route("/")
+class PeriodeList(Resource):
+    """Handles listing and creating periodes"""
 
-@periode_bp.route('/<int:code_periode>', methods=['PUT'])
-def update_periode(code_periode):
-    data = request.get_json()
-    db = get_db()
-    repo = PeriodeRepository(db)
-    updated_periode = repo.update(code_periode, nom=data['nom'])
-    if not updated_periode:
-        return {'detail': 'Periode not found'}, 404
-    return jsonify(updated_periode.to_dict())
+    @periode_api.marshal_list_with(periode_model)
+    def get(self):
+        """Get all periodes"""
+        repo = PeriodeRepository(db.session)
+        return repo.get_all(), 200
 
-@periode_bp.route('/<int:code_periode>', methods=['DELETE'])
-def delete_periode(code_periode):
-    db = get_db()
-    repo = PeriodeRepository(db)
-    if not repo.delete(code_periode):
-        return {'detail': 'Periode not found'}, 404
-    return {'message': 'Periode deleted'}
+    @periode_api.expect(periode_create_model)
+    @periode_api.marshal_with(periode_model, code=201)
+    def post(self):
+        """Create a new periode"""
+        data = request.get_json()
+        repo = PeriodeRepository(db.session)
+        return repo.create(**data), 201
+
+
+@periode_api.route("/<int:id_periode>")
+class PeriodeResource(Resource):
+    """Handles operations on a single periode"""
+
+    @periode_api.marshal_with(periode_model)
+    def get(self, id_periode):
+        """Get a periode by its ID"""
+        repo = PeriodeRepository(db.session)
+        periode = repo.get_by_id(id_periode)
+        if not periode:
+            periode_api.abort(404, "Periode not found")
+        return periode
+
+    @periode_api.expect(periode_create_model)
+    @periode_api.marshal_with(periode_model)
+    def put(self, id_periode):
+        """Update an existing periode"""
+        data = request.get_json()
+        repo = PeriodeRepository(db.session)
+        updated_periode = repo.update(id_periode, **data)
+        if not updated_periode:
+            periode_api.abort(404, "Periode not found")
+        return updated_periode
+
+    def delete(self, id_periode):
+        """Delete a periode by its ID"""
+        repo = PeriodeRepository(db.session)
+        if not repo.delete(id_periode):
+            periode_api.abort(404, "Periode not found")
+        return {"message": "Periode deleted"}, 200
