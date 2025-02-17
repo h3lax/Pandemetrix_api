@@ -4,33 +4,45 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from app import models
 
-class ContinentRepository:
-    
-    def create(self, nom: str) -> models.Maladie:
-        maladie = models.Maladie(nom=nom)
-        self.db.add(maladie)
-        self.db.commit()
-        self.db.refresh(maladie)
+class MaladieRepository:
+    """Repository for managing Maladie data"""
+
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
+
+    def create(self, **kwargs) -> models.Maladie:
+        """Create a new maladie"""
+        maladie = models.Maladie(**kwargs)
+        self.db_session.add(maladie)
+        self.db_session.commit()
+        self.db_session.refresh(maladie)
         return maladie
 
-    def get_by_id(self, code_maladie: int) -> Optional[models.Maladie]:
-        return self.db.query(models.Maladie).filter(models.Maladie.code_maladie == code_maladie).first()
+    def get_by_id(self, id_maladie: int) -> Optional[models.Maladie]:
+        """Retrieve a maladie by its ID"""
+        return self.db_session.query(models.Maladie).filter(models.Maladie.id == id_maladie).first()
 
     def get_all(self) -> List[models.Maladie]:
-        return self.db.query(models.Maladie).all()
+        """Retrieve all maladies"""
+        return self.db_session.query(models.Maladie).all()
 
-    def update(self, code_maladie: int, nom: str) -> Optional[models.Maladie]:
-        maladie = self.get_by_id(code_maladie)
+    def update(self, id_maladie: int, **kwargs) -> Optional[models.Maladie]:
+        """Update an existing maladie"""
+        maladie = self.get_by_id(id_maladie)
         if maladie:
-            maladie.nom = nom
-            self.db.commit()
-            self.db.refresh(maladie)
+            allowed_fields = {"nom"}
+            for key, value in kwargs.items():
+                if key in allowed_fields and value is not None:
+                    setattr(maladie, key, value)
+            self.db_session.commit()
+            self.db_session.refresh(maladie)
         return maladie
 
-    def delete(self, code_maladie: int) -> bool:
-        maladie = self.get_by_id(code_maladie)
+    def delete(self, id_maladie: int) -> bool:
+        """Delete a maladie by ID"""
+        maladie = self.get_by_id(id_maladie)
         if maladie:
-            self.db.delete(maladie)
-            self.db.commit()
+            self.db_session.delete(maladie)
+            self.db_session.commit()
             return True
         return False
