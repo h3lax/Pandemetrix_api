@@ -33,7 +33,9 @@ def apply_transformations(df: pd.DataFrame, transformations):
             elif dtype == "str":
                 df.loc[:, col] = df[col].astype(str)
 
-    # Filtrage des données 
+    # Suppression des données inutile et aberrantes
+    # Les lignes où les nouveaux cas et les nouveaux décès sont à 0
+    # Les lignes où les nouveaux cas et les nouveaux décès sont négatifs  
     df = df.loc[~((df['nouveaux_cas'] == 0) & (df['nouveaux_deces'] == 0))]
     df = df.loc[~((df['nouveaux_cas'] < 0) | (df['nouveaux_deces'] < 0))]
 
