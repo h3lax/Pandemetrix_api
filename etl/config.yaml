@@ -1,6 +1,6 @@
 datasets:
   covid19:
-    input_base: "covid19"
+    input_file: "WHO-COVID-19-global-daily-data.csv"
     output_file: "cleaned_covid19.csv"
     columns_to_keep: ["Date_reported", "Country", "New_cases", "New_deaths", "WHO_region", "Country_code"]
     rename_columns:
@@ -19,17 +19,20 @@ datasets:
     remove_na: true
 
 
-  # monkeypox:
-    # input_file: "monkeypox.csv"
-    # output_file: "cleaned_monkeypox.csv"
-    # columns_to_keep: ["Date", "New_cases", "Location"]
-    # rename_columns:
-    #   Date: "date"
-    #   New_cases: "cases"
-    #   Location: "country"
-    # data_types:
-    #   date: "datetime"
-    #   cases: "int"
-    #   country: "str"
-    # remove_duplicates: true
-    # remove_na: true
+  monkeypox:
+      input_file: "monkeypox.csv"
+      output_file: "cleaned_monkeypox.csv"
+      columns_to_keep: ["date","location", "new_cases", "new_deaths"]  
+      rename_columns:
+        date: "date_debut"
+        new_cases: "nouveaux_cas"
+        new_deaths: "nouveaux_deces"
+        location: "pays"
+      data_types:
+        date_debut: "datetime"
+        nouveaux_cas: "int"
+        nouveaux_deces: "int"
+        pays: "str"
+      remove_duplicates: true
+      remove_na: true
+      # allowed_countries_file: "cleaned_covid19.csv"

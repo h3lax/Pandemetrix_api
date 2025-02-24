@@ -47,6 +47,17 @@ def apply_transformations(df: pd.DataFrame, transformations):
     if transformations.get("remove_na", False):
         df = df.dropna()
 
+    # # Charger la liste de pays autorisés (si le champ allowed_countries_file est présent)
+    # if "allowed_countries_file" in transformations:
+    #     valid_countries_df = load_csv(transformations["allowed_countries_file"])
+    #     # Suppose que la colonne de pays dans pays.csv s’appelle "pays". 
+    #     # Adapte ce nom selon la structure de pays.csv
+    #     list_of_valid_countries = valid_countries_df["pays"].unique().tolist()
+
+    #     # Filtrer le DataFrame principal en ne gardant que les pays autorisés
+    #     #   (en supposant que dans monkeypox.csv, après renommage, le pays se trouve dans df["pays"])
+    #     df = df[df["pays"].isin(list_of_valid_countries)]
+
     return df
 
 def transform_data(file_key):
