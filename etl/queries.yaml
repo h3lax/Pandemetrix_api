@@ -5,4 +5,3 @@ queries:
 
 urls:
   OMS_Daily: "https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-daily-data.csv" # WHO COVID-19 global daily data
-  recent_data: "http://example.com/recent_data.csv"
