@@ -92,12 +92,14 @@ services:
   app:
     build: ../app
     container_name: pandemetrix_app
+    restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8080:80"
     environment:
-      - VUE_APP_API_BASE_URL=http://pandemetrix_api:5000
+      - VITE_API_BASE_URL=http://pandemetrix_api:5000
     volumes:
       - ../app:/app
+      - /app/node_modules  # Ensures node_modules inside the container isn’t overwritten
     depends_on:
       - api
 
