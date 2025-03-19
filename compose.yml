@@ -94,12 +94,13 @@ services:
     container_name: pandemetrix_app
     restart: unless-stopped
     ports:
-      - "5173:5173"  # Expose port 5173 for Vite (default development port
+      - "5173:5173"
     environment:
       - VITE_API_BASE_URL=http://pandemetrix_api:5000
+      - CHOKIDAR_USEPOLLING=true # Required for hot reloading
     volumes:
       - ../app:/app
-      - /app/node_modules  # Ensures node_modules inside the container isn’t overwritten
+      - ../app/node_modules:/app/node_modules # Keeps local node_modules in sync
     depends_on:
       - api
 
