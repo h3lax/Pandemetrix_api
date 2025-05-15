@@ -103,11 +103,25 @@ services:
       - pandemetrix_node_modules:/app/node_modules # let docker manage the volume
     depends_on:
       - api
+  
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0.17-ubuntu2204
+    container_name: pandemetrix_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - pandemetrix_mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo_user
+      - MONGO_INITDB_ROOT_PASSWORD=mongo_password
+      - MONGO_INITDB_DATABASE=app_db
 
 volumes:
   postgresql-metabase-data:
   postgresql-api-data:
   postgresql-raw-data:
   pandemetrix_node_modules:
+  pandemetrix_mongodb_data:
 
 #TODO: Ajouter les services Flask + variables d'environnement
