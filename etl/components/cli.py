@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 import yaml
 from config import Config
-from .postgresdb import insert_data
+from .mongodb import insert_data
 from .transform import transform_data
 
 def load_queries():
@@ -85,4 +85,4 @@ def main():
     else:
         print("Inserting data into database...")
 
-    insert_data(Config.POSTGRES_RAW_CONFIG, transformed_data, args.collection)
+    insert_data(Config.MONGODB_CONFIG, transformed_data, args.collection)

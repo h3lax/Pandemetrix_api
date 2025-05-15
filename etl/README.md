@@ -22,5 +22,7 @@ python main.py --csv-file <csv-file> --collection <Collection>
 exemple : 
 ```bash
 python main.py --csv-file ../data/bronze/covid_19_clean_complete.csv --collection covid19_kaggle
+
+python main.py --query-name OMS_Daily --collection test
 ```
 

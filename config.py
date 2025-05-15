@@ -22,6 +22,14 @@ class Config:
         'port': '5432'
     }
 
+    MONGODB_CONFIG = {
+        'host': 'mongodb',
+        'port': 27017,
+        'username': 'mongo_user',
+        'password': 'mongo_password',
+        'database': 'api_db',
+    }
+
 class DevelopmentConfig(Config):
     """Development-specific configuration."""
     DEBUG = True
