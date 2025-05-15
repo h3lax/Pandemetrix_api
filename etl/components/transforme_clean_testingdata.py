@@ -1,19 +1,19 @@
-
-OWD_covid_testing = "https://catalog.ourworldindata.org/garden/covid/latest/testing/testing.csv"
-
 import pandas as pd
 import numpy as np
 
+OWD_covid_testing = "https://catalog.ourworldindata.org/garden/covid/latest/testing/testing.csv"
+df_testing = pd.read_csv(OWD_covid_testing)
 
+# Fonction de nettoyage des données de testing
+# Cette fonction prend un DataFrame en entrée et effectue plusieurs étapes de nettoyage, y compris la suppression des doublons, le traitement des valeurs manquantes et aberrantes, et l'interpolation des données.
 def clean_testingdata(data: pd.DataFrame):
 
     print("Début du nettoyage des données de testing...")
 
-    # Column name cleanup
     data.columns = (
-        data.columns.str.replace(r'[^0-9a-zA-Z]+', '', regex=True)
-        .str.lower()
-        .str.strip()
+    data.columns.str.replace(r'[^0-9a-zA-Z_]+', '', regex=True)  # Added _ to keep underscores
+    .str.lower()
+    .str.strip()
     )
 
     data = data.dropna(axis=1, how="all")
@@ -33,7 +33,7 @@ def clean_testingdata(data: pd.DataFrame):
     print(f"Doublons supprimés: {doublons_supprimes}")
 
     colonnes_numeriques = [
-        'total_tests', 'new_tests', 'total_tests_per_thousand', 'new_tests_per_thousand', 'new_tests_7day_smoothed', 'new_tests_per_thousand_7day_smoothed'
+        'total_tests', 'new_tests', 'total_tests_per_thousand', 'new_tests_per_thousand', 'new_tests_7day_smoothed', 'new_tests_per_thousand_7day_smoothed'     
     ]
 
     for col in colonnes_numeriques:
@@ -103,3 +103,5 @@ def clean_testingdata(data: pd.DataFrame):
     print(f"Forme finale des données: {data.shape}")
     print("Nettoyage des données terminé.")
     return data
+
+#clean_testingdata(df_testing)
