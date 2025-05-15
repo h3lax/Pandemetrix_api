@@ -2,7 +2,7 @@ OWD_covid_vaccinations = "https://catalog.ourworldindata.org/garden/covid/latest
 import pandas as pd
 import numpy as np
 
-
+df_testing = pd.read_csv(OWD_covid_vaccinations)
 
 def clean_vaccination_data(data: pd.DataFrame) -> pd.DataFrame:
     print("Début du nettoyage des données de vaccination...")
@@ -14,13 +14,13 @@ def clean_vaccination_data(data: pd.DataFrame) -> pd.DataFrame:
         .str.strip()
     )
 
-    print(f"Forme initiale des données: {data.shape}")
+    print(f"Nombre Data : {data.shape}")
 
-    # Conversion de la colonne date
+    # Cleaning de la colonne date
     try:
         data['date'] = pd.to_datetime(data['date'], errors='coerce')
     except Exception:
-        print("Avertissement: Impossible de convertir la colonne 'date'")
+        print("Attention: Impossible de convertir la colonne 'date'")
 
     # Tri et suppression des doublons
     data = data.sort_values(by=['country', 'date'])
@@ -30,7 +30,7 @@ def clean_vaccination_data(data: pd.DataFrame) -> pd.DataFrame:
     numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
 
     for col in numeric_cols:
-        data[col] = pd.to_numeric(data[col], errors='coerce')
+        data[col] = pd.to_numeric(data[col], errors='coerce') 
         neg_count = (data[col] < 0).sum()
         if neg_count > 0:
             print(f"{neg_count} valeurs négatives corrigées dans '{col}'")
@@ -75,3 +75,5 @@ def clean_vaccination_data(data: pd.DataFrame) -> pd.DataFrame:
     print(f"Forme finale des données: {data.shape}")
     print("Nettoyage terminé.")
     return data
+
+#clean_vaccination_data(df_testing)
