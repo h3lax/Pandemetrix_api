@@ -4,11 +4,11 @@ import pandas as pd
 import requests
 import yaml
 from config import Config
-from .mongodb import insert_data
-from .transform import transform_data
+from components.mongodb import insert_data
+from components.transform import transform_data
 
 def load_queries():
-    with open("etl/queries.yaml", "r") as file:
+    with open("app/etl/queries.yaml", "r") as file:
         return yaml.safe_load(file)
 
 def get_query(query_name):
@@ -86,3 +86,6 @@ def main():
         print("Inserting data into database...")
 
     insert_data(Config.MONGODB_CONFIG, transformed_data, args.collection)
+
+if __name__ == "__main__":
+    main()

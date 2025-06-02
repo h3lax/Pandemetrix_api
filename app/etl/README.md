@@ -23,6 +23,6 @@ exemple :
 ```bash
 python main.py --csv-file ../data/bronze/covid_19_clean_complete.csv --collection covid19_kaggle
 
-python main.py --query-name OMS_Daily --collection test
+python app/etl/main.py --download-url-name OMS_Daily --collection testos
 ```
 

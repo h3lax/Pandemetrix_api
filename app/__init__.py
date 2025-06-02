@@ -17,6 +17,8 @@ def create_app(config_class=Config):
 
     # Load configuration
     app.config.from_object(config_class) # We using the config.py
+    app.config['MAX_CONTENT_LENGTH'] = 40 * 1024 * 1024  # 20MB
+
 
     # Initialize extensions
     db.init_app(app)

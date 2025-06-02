@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, reqparse
-from etl.components.mongodb import fetch_data
+from app.etl.components.mongodb import fetch_data
 from config import Config
 from datetime import datetime
 import json
