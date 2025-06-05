@@ -4,8 +4,8 @@ import pandas as pd
 import requests
 import yaml
 from config import Config
-from components.mongodb import insert_data
-from components.transform import transform_data
+from app.etl.components.mongodb import insert_data
+from app.etl.components.transform import transform_data
 
 def load_queries():
     with open("app/etl/queries.yaml", "r") as file:

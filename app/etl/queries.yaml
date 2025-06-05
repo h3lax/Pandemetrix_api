@@ -5,3 +5,4 @@ queries:
 
 urls:
   OMS_Daily: "https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-daily-data.csv" # WHO COVID-19 global daily data
+  Color_Test: "https://cdn.wsform.com/wp-content/uploads/2020/06/color_srgb.csv"
