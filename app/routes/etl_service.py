@@ -3,8 +3,16 @@ from flask_restx import Namespace, Resource
 import pandas as pd
 from app.etl.components.transform import transform_data
 from app.etl.components.mongodb import insert_data
+from app.etl.main import get_url, download_csv
 from config import Config
 import io
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
 
 
 etl_ns = Namespace('etl', description='ETL operations')
@@ -16,6 +24,7 @@ class FileUpload(Resource):
             return {'message': 'No file part in the request'}, 400
         
         file = request.files['file']
+        title = request.form.get('title', 'default')
         
         if file.filename == '':
             return {'message': 'No selected file'}, 400
@@ -27,7 +36,32 @@ class FileUpload(Resource):
             if transformed.empty:
                 return {'message': 'No data after transformation'}, 400
 
-            insert_data(Config.MONGODB_CONFIG, transformed, 'SALUTANTHONY')
+            insert_data(Config.MONGODB_CONFIG, transformed, title)
             return {'message': 'File uploaded and processed successfully'}, 200
         except Exception as e:
             return {'message': f'Error processing file: {str(e)}'}, 500
+
+@etl_ns.route('/download')
+class FileDownload(Resource):
+    def post(self):
+        code = request.json.get('code')
+        if not code:
+            return {'message': 'Code is required'}, 400
+        
+        try:
+            url = get_url(code)
+            if not url:
+                exit()
+            csv_content = download_csv(url)
+            raw_data = pd.read_csv(io.StringIO(csv_content))
+            transformed = transform_data(raw_data)
+
+            if transformed.empty:
+                return {'message': 'No data after transformation'}, 400
+
+            insert_data(Config.MONGODB_CONFIG, transformed, "TESTURLE")
+            return {'message': 'File uploaded and processed successfully'}, 200
+        except Exception as e:
+            return {'message': f'Error processing file: {str(e)}'}, 500
+
+        

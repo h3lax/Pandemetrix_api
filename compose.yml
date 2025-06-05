@@ -96,7 +96,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_BASE_URL=http://pandemetrix_api:5000
+      - VITE_API_BASE_URL=http://localhost:5000
       - CHOKIDAR_USEPOLLING=true # Required for hot reloading
     volumes:
       - ../app:/app
