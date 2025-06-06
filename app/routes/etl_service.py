@@ -2,18 +2,10 @@ from flask import request
 from flask_restx import Namespace, Resource
 import pandas as pd
 from app.etl.components.transform import transform_data
-from app.etl.components.mongodb import insert_data
+from app.etl.components.mongodb import insert_data, get_collection_infos
 from app.etl.main import get_url, download_csv
 from config import Config
 import io
-
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-
 
 etl_ns = Namespace('etl', description='ETL operations')
 
@@ -64,4 +56,12 @@ class FileDownload(Resource):
         except Exception as e:
             return {'message': f'Error processing file: {str(e)}'}, 500
 
+@etl_ns.route('/collections')
+class GetCollections(Resource):
+    def get(self):
+        try:
+            collections = get_collection_infos()
+            return {'collections': collections, 'message': 'Collections fetched successfully'}, 200
+        except Exception as e:
+            return {'message': f'Error fetching collections: {str(e)}'}, 500
         
