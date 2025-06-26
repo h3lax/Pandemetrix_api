@@ -12,10 +12,10 @@ class MLDataProcessor:
     def check_csv_files_exist(self) -> Dict[str, bool]:
         """Vérifie si les fichiers CSV requis existent"""
         required_files = {
-            "cases_deaths": "data/raw/cases_deaths.csv",
-            "vaccinations": "data/raw/vaccinations_global.csv", 
-            "hospital": "data/raw/hospital.csv",
-            "testing": "data/raw/testing.csv"
+            "cases_deaths": "app/data/raw/cases_deaths.csv",
+            "vaccinations": "app/data/raw/vaccinations_global.csv", 
+            "hospital": "app/data/raw/hospital.csv",
+            "testing": "app/data/raw/testing.csv"
         }
         
         status = {}
@@ -28,44 +28,37 @@ class MLDataProcessor:
         
         return status
     
-    def load_csv_to_mongodb(self, collection_name: str = None) -> Dict[str, str]:
+    def load_csv_to_mongodb(self):
         """Charge les fichiers CSV dans MongoDB"""
-        file_status = self.check_csv_files_exist()
         results = {}
         
-        file_mappings = {
-            "cases_deaths": "ml_cases_deaths",
-            "vaccinations": "ml_vaccinations", 
-            "hospital": "ml_hospital",
-            "testing": "ml_testing"
+        # Vérifier si les fichiers existent
+        csv_files = {
+            "cases_deaths": "app/data/raw/cases_deaths.csv",
+            "vaccinations": "app/data/raw/vaccinations_global.csv", 
+            "hospital": "app/data/raw/hospital.csv",
+            "testing": "app/data/raw/testing.csv"
         }
         
-        for file_key, mongo_collection in file_mappings.items():
-            file_info = file_status[file_key]
-            
-            if not file_info["exists"]:
-                results[file_key] = f"SKIP - File not found: {file_info['path']}"
+        for key, path in csv_files.items():
+            if not os.path.exists(path):
+                results[key] = f"NOT FOUND: {path}"
                 continue
                 
             try:
-                # Lire le CSV
-                df = pd.read_csv(file_info['path'])
-                
-                # Nettoyer les données
+                df = pd.read_csv(path)
                 df = self._clean_dataframe(df)
                 
-                # Supprimer la collection existante et insérer les nouvelles données
-                self.db[mongo_collection].drop()
+                collection = self.db[f"ml_{key}"]
+                collection.drop()
                 
                 if not df.empty:
                     records = df.to_dict('records')
-                    self.db[mongo_collection].insert_many(records)
-                    results[file_key] = f"SUCCESS - {len(records)} records inserted into {mongo_collection}"
-                else:
-                    results[file_key] = f"WARNING - No data after cleaning from {file_info['path']}"
-                    
+                    collection.insert_many(records)
+                    results[key] = f"SUCCESS: {len(records)} records"
+                
             except Exception as e:
-                results[file_key] = f"ERROR - {str(e)}"
+                results[key] = f"ERROR: {str(e)}"
         
         return results
     

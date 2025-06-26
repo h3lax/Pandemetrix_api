@@ -15,13 +15,13 @@ class ModelTrainer:
     """Entraîneur de modèles ML pour Pandemetrix"""
     
     def __init__(self):
-        self.data_path = "data/raw"
+        self.data_path = "app/data/raw"
         self.model_path = "models/covid_polynomial_model.pkl"
         self.metadata_path = "models/model_metadata.json"
         
         # Créer les dossiers nécessaires
-        os.makedirs("models", exist_ok=True)
-        os.makedirs("data/processed", exist_ok=True)
+        os.makedirs("app/models", exist_ok=True)
+        os.makedirs("app/data/processed", exist_ok=True)
     
     def load_and_merge_data(self) -> pd.DataFrame:
         """Charge et fusionne les données sources"""

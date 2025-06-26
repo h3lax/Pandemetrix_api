@@ -24,14 +24,14 @@ class MLHealth(Resource):
 
 @ml_api.route("/countries")
 class MLCountries(Resource):
-    """Pays supportés par ML"""
-    
-    @ml_api.marshal_with(swagger_models['ml_countries'])
-    @ml_api.doc('get_ml_countries', description='Liste des pays supportés pour les prédictions ML')
     def get(self):
-        """Get supported countries for ML predictions"""
         if not predictor.is_loaded:
-            return {"error": "Model not loaded"}, 500
+            return {
+                "countries": [],
+                "total_countries": 0,
+                "sample_countries": [],
+                "note": "Model not loaded. Train the model first."
+            }, 200  # 200 au lieu de 500
         
         countries = predictor.get_supported_countries()
         return {
@@ -43,14 +43,12 @@ class MLCountries(Resource):
 
 @ml_api.route("/model-info")
 class MLModelInfo(Resource):
-    """Informations du modèle"""
-    
-    @ml_api.marshal_with(swagger_models['ml_model_details'])
-    @ml_api.doc('get_ml_model_info', description='Informations détaillées sur le modèle ML')
     def get(self):
-        """Get ML model information"""
         if not predictor.is_loaded:
-            return {"error": "Model not loaded"}, 500
+            return {
+                "error": "Model not loaded",
+                "message": "Train the model first using the button below"
+            }, 200  # 200 au lieu de 500
         
         return predictor.get_model_info(), 200
 
@@ -135,41 +133,28 @@ class MLLoadModel(Resource):
 
 @ml_api.route("/train")
 class MLTrain(Resource):
-    """Entraînement du modèle"""
-    
-    @ml_api.marshal_with(swagger_models['ml_training_result'])
-    @ml_api.doc('ml_train_model', description='Lance l\'entraînement d\'un nouveau modèle ML')
-    @ml_api.response(200, 'Entraînement réussi')
-    @ml_api.response(400, 'Fichiers de données manquants')
-    @ml_api.response(500, 'Erreur d\'entraînement')
     def post(self):
-        """Train new ML model (requires data files)"""
         try:
-            # Importer le trainer ici pour éviter les imports lourds au démarrage
             from app.ml.model_trainer import ModelTrainer
-            
             trainer = ModelTrainer()
             
-            # Vérifier si les fichiers de données existent
+            # Corriger les chemins
             required_files = [
-                "data/raw/cases_deaths.csv",
-                "data/raw/vaccinations_global.csv", 
-                "data/raw/hospital.csv",
-                "data/raw/testing.csv"
+                "app/data/raw/cases_deaths.csv",
+                "app/data/raw/vaccinations_global.csv", 
+                "app/data/raw/hospital.csv",
+                "app/data/raw/testing.csv"
             ]
             
             missing_files = [f for f in required_files if not os.path.exists(f)]
             if missing_files:
-                ml_api.abort(400, {
+                return {
                     "error": "Missing data files for training",
                     "missing_files": missing_files,
                     "note": "Upload data files to train the model"
-                })
+                }, 400
             
-            # Lancer l'entraînement
             result = trainer.train_model()
-            
-            # Recharger le modèle après entraînement
             predictor.load_model()
             
             return {
@@ -179,7 +164,7 @@ class MLTrain(Resource):
             }, 200
             
         except Exception as e:
-            ml_api.abort(500, f"Training error: {str(e)}")
+            return {"error": f"Training error: {str(e)}"}, 500
 
 @ml_api.route("/create-synthetic-data")
 class MLCreateSyntheticData(Resource):
@@ -214,3 +199,20 @@ def init_ml_predictor():
     else:
         print("⚠️ Modèle ML non trouvé - utilisez /ml/train pour l'entraîner")
     return success
+
+@ml_api.route("/load-csv-data")
+class MLLoadCSVData(Resource):
+    def post(self):
+        try:
+            from app.ml.data_processor import MLDataProcessor
+            processor = MLDataProcessor()
+            
+            # Juste le chargement, pas la préparation
+            results = processor.load_csv_to_mongodb()
+            
+            return {
+                "message": "CSV loading attempted",
+                "mongodb_results": results
+            }, 200
+        except Exception as e:
+            return {"error": str(e)}, 500
