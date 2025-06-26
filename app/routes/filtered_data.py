@@ -49,8 +49,7 @@ class FilteredData(Resource):
         
         # Fetch data
         try:
-            # This is now correctly serialized
-            data = fetch_data(Config.MONGODB_CONFIG, "test", query, skip=skip, limit=page_size)
+            data = fetch_data("test", query, skip=skip, limit=page_size)
             return json.loads(data), 200
         except Exception as e:
             return {"error": str(e)}, 500
