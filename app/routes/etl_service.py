@@ -28,7 +28,7 @@ class FileUpload(Resource):
             if transformed.empty:
                 return {'message': 'No data after transformation'}, 400
 
-            insert_data(Config.MONGODB_CONFIG, transformed, title)
+            insert_data(transformed, title)
             return {'message': 'File uploaded and processed successfully'}, 200
         except Exception as e:
             return {'message': f'Error processing file: {str(e)}'}, 500
@@ -51,7 +51,7 @@ class FileDownload(Resource):
             if transformed.empty:
                 return {'message': 'No data after transformation'}, 400
 
-            insert_data(Config.MONGODB_CONFIG, transformed, "TESTURLE")
+            insert_data(transformed, "TESTURLE")
             return {'message': 'File uploaded and processed successfully'}, 200
         except Exception as e:
             return {'message': f'Error processing file: {str(e)}'}, 500
