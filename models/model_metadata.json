@@ -3,7 +3,7 @@
         "name": "COVID-19 Deaths Prediction Model",
         "type": "polynomial_regression_with_ridge",
         "version": "1.0",
-        "training_date": "2025-06-26T13:35:16.490098",
+        "training_date": "2025-06-26T14:19:02.721853",
         "features_count": 49,
         "countries_count": 44
     },
