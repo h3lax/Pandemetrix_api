@@ -49,7 +49,7 @@ class FilteredData(Resource):
         
         # Fetch data
         try:
-            data = fetch_data("test", query, skip=skip, limit=page_size)
+            data = fetch_data("ml_cases_deaths", query, skip=skip, limit=page_size)
             return json.loads(data), 200
         except Exception as e:
             return {"error": str(e)}, 500
