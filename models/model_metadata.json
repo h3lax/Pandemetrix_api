@@ -3,7 +3,7 @@
         "name": "COVID-19 Deaths Prediction Model",
         "type": "polynomial_regression_with_ridge",
         "version": "1.0",
-        "training_date": "2025-06-26T14:19:02.721853",
+        "training_date": "2025-06-28T12:53:36.804236",
         "features_count": 49,
         "countries_count": 44
     },
@@ -119,13 +119,13 @@
         "ridge__alpha": 10.0
     },
     "performance": {
-        "cross_validation_r2": 0.8532882109719793,
-        "test_r2": 0.8248981605755608,
-        "test_mae": 45.44295814222954,
-        "baseline_r2": 0.6589115726347363,
-        "baseline_mae": 68.3281676002665,
-        "improvement_r2_percent": 25.19102635837876,
-        "improvement_mae_percent": 33.49308237258758
+        "cross_validation_r2": 0.8532882109719745,
+        "test_r2": 0.824898160575577,
+        "test_mae": 45.44295814222579,
+        "baseline_r2": 0.6588868029006064,
+        "baseline_mae": 68.33384377053771,
+        "improvement_r2_percent": 25.1957327031201,
+        "improvement_mae_percent": 33.49860678872184
     },
     "countries_supported": [
         "Algeria",
