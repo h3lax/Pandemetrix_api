@@ -15,3 +15,14 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+node_modules/
+*.pkl
+data/
+coverage/
+cypress-results.xml
+.pytest_cache/
+__pycache__/
+*.pyc
+dist/
+.DS_Store

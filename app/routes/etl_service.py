@@ -50,8 +50,8 @@ class FileDownload(Resource):
 
             if transformed.empty:
                 return {'message': 'No data after transformation'}, 400
-
-            insert_data(transformed, "TESTURLE")
+              
+            insert_data(transformed, "covid_data_oms")
             return {'message': 'File uploaded and processed successfully'}, 200
         except Exception as e:
             return {'message': f'Error processing file: {str(e)}'}, 500
@@ -64,4 +64,38 @@ class GetCollections(Resource):
             return {'collections': collections, 'message': 'Collections fetched successfully'}, 200
         except Exception as e:
             return {'message': f'Error fetching collections: {str(e)}'}, 500
+        
+@etl_ns.route('/train-model')
+class TrainModel(Resource):
+    def post(self):
+        try:
+            from app.ml.pandemic_predictor import PandemicPredictor
+            predictor = PandemicPredictor()
+            metrics = predictor.train()
+            return {
+                'status': 'success',
+                'metrics': metrics,
+                'message': 'Modèle Random Forest entraîné'
+            }, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
+
+@etl_ns.route('/predict')
+class MLPredict(Resource):
+    def post(self):
+        try:
+            data = request.get_json()
+            features = data.get('features', [100, 90, 80, 180])  # [avg7j, lag1, lag7, jour]
+            
+            from app.ml.pandemic_predictor import PandemicPredictor
+            predictor = PandemicPredictor()
+            prediction = predictor.predict(features)
+            
+            return {
+                'prediction': float(prediction[0]),
+                'features_used': features,
+                'model': 'RandomForest'
+            }, 200
+        except Exception as e:
+            return {'error': str(e)}, 500
         

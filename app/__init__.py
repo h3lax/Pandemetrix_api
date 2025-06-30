@@ -18,12 +18,12 @@ def create_app(config_class=Config):
 
     # Load configuration
     app.config.from_object(config_class) # We using the config.py
-    app.config['MAX_CONTENT_LENGTH'] = 40 * 1024 * 1024  # 20MB
+    app.config['MAX_CONTENT_LENGTH'] = 60 * 1024 * 1024  # 40MB
 
 
     # Initialize extensions
     db.init_app(app)
-    migrate = Migrate(app, db) # TODO: What is this? Not sure it's needed nor in use
+    migrate = Migrate(app, db)
 
     # Register blueprints (routes)
     register_routes(app)
