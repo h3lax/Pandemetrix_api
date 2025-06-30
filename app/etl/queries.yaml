@@ -4,5 +4,7 @@ queries:
   recent_projects: "SELECT * FROM ??? WHERE created_at > NOW() - INTERVAL 30 DAY;"
 
 urls:
-  OMS_Daily: "https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-daily-data.csv" # WHO COVID-19 global daily data
-  Color_Test: "https://cdn.wsform.com/wp-content/uploads/2020/06/color_srgb.csv"
+  cases_deaths: "https://catalog.ourworldindata.org/garden/covid/latest/cases_deaths/cases_deaths.csv"
+  vaccinations_global: "https://catalog.ourworldindata.org/garden/covid/latest/vaccinations_global/vaccinations_global.csv"
+  hospital: "https://catalog.ourworldindata.org/garden/covid/latest/hospital/hospital.csv"
+  testing: "https://catalog.ourworldindata.org/garden/covid/latest/testing/testing.csv"

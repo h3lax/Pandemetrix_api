@@ -13,8 +13,8 @@ def create_app(config_class=Config):
     app = Flask(__name__)
 
     # Enable CORS for the entire app
-    #CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST"])
-    CORS(app)  # Allows everything
+    CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST"])
+    #CORS(app)  # Allows everything
 
     # Load configuration
     app.config.from_object(config_class) # We using the config.py
