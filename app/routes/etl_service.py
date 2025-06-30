@@ -50,7 +50,7 @@ class FileDownload(Resource):
 
             if transformed.empty:
                 return {'message': 'No data after transformation'}, 400
-
+              
             insert_data(transformed, "covid_data_oms")
             return {'message': 'File uploaded and processed successfully'}, 200
         except Exception as e:
