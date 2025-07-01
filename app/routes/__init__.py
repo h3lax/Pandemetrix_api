@@ -8,6 +8,7 @@ from app.routes.maladie_routes import maladie_api
 from app.routes.concerne_routes import concerne_api
 from app.routes.filtered_data import filtered_data_ns
 from app.routes.etl_service import etl_ns
+from app.routes.ml_routes import ml_api
 from flask_restx import Api as Api
 
 def register_routes(app):
@@ -26,4 +27,5 @@ def register_routes(app):
     swagger.add_namespace(concerne_api, path="/api/concerne")
     swagger.add_namespace(filtered_data_ns, path="/api/data")
     swagger.add_namespace(etl_ns, path="/api/etl")
+    swagger.add_namespace(ml_api, path="/api/ml")
     
