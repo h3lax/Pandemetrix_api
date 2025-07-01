@@ -104,6 +104,28 @@ services:
     depends_on:
       - api
   
+  ia:
+    build: ../Pandemetrix_ML
+    container_name: pandemetrix_ia
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - ../Pandemetrix_ML:/app
+    depends_on:
+      - mongodb
+
+  etl:
+    build: ../etl
+    container_name: pandemetrix_etl
+    restart: unless-stopped
+    ports:
+      - "5002:5000"
+    volumes:
+      - ../Pandemetrix_ML:/api
+    depends_on:
+      - mongodb
+  
   mongodb:
     image: mongodb/mongodb-community-server:7.0.17-ubuntu2204
     container_name: pandemetrix_mongodb
