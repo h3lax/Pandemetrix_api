@@ -71,7 +71,7 @@ class FilteredData(Resource):
                 # Utiliser directement MongoDB
                 from app.database.mongoClient import get_db
                 db = get_db()
-                collection = db['ml_cases_deaths']  # Collection principale
+                collection = db['cases_deaths']  # Collection principale
                 
                 data = list(collection.aggregate(pipeline))
                 
@@ -83,7 +83,7 @@ class FilteredData(Resource):
                 return data, 200
             else:
                 # Utiliser la fonction normale pour filtres spécifiques
-                data = fetch_data("ml_cases_deaths", query, skip=skip, limit=page_size)
+                data = fetch_data("cases_deaths", query, skip=skip, limit=page_size)
                 return json.loads(data), 200
                 
         except Exception as e:
@@ -96,7 +96,7 @@ class AllCountries(Resource):
         try:
             from app.database.mongoClient import get_db
             db = get_db()
-            collection = db['ml_cases_deaths']
+            collection = db['cases_deaths']
             
             # Exclure les continents et agrégations
             excluded_regions = [
@@ -153,7 +153,7 @@ class AllData(Resource):
         try:
             from app.database.mongoClient import get_db
             db = get_db()
-            collection = db['ml_cases_deaths']
+            collection = db['cases_deaths']
             
             # Query simple avec dates si spécifiées et exclusion des continents
             excluded_regions = [
