@@ -1,3 +1,4 @@
+# compose.yml - Services séparés (sans Pandemetrix_ML)
 services:
   api:
     build: .
@@ -14,11 +15,15 @@ services:
       - POSTGRES_API_DB=api_db
       - POSTGRES_API_USER=api_user
       - POSTGRES_API_PASSWORD=api_password
+      # Configuration Pandemetrix_ML externe (host.docker.internal pour accès depuis container)
+      - PANDEMETRIX_ML_URL=http://host.docker.internal:5001/api/v1/covid
+      - PANDEMETRIX_ML_TIMEOUT=30
     volumes:
-      - ./:/api # responsive to changes in the api directory
+      - ./:/api
     depends_on:
       - postgresql_raw
       - postgresql_api
+
   postgresql_raw:
       image: postgres:latest
       container_name: postgresql_raw
@@ -36,6 +41,7 @@ services:
         interval: 10s
         timeout: 5s
         retries: 5
+
   postgresql_api:
       image: postgres:latest
       container_name: postgresql_api
@@ -63,10 +69,10 @@ services:
     environment:
       - MB_DB_TYPE=postgres
       - MB_DB_DBNAME=metabase_db
-      - MB_DB_PORT=5432  # Changé de 5434 à 5432
+      - MB_DB_PORT=5432
       - MB_DB_USER=metabase
       - MB_DB_PASS=metabase_password
-      - MB_DB_HOST=postgresql_metabase  # Utilise le nom du service docker
+      - MB_DB_HOST=postgresql_metabase
       - JAVA_TIMEZONE=Europe/Paris
     depends_on:
       - postgresql_metabase
@@ -76,7 +82,7 @@ services:
     container_name: postgresql_metabase
     restart: unless-stopped
     ports:
-      - '5431:5432'  # Port externe 5434, interne toujours 5432
+      - '5431:5432'
     environment:
       - POSTGRES_USER=metabase
       - POSTGRES_PASSWORD=metabase_password
@@ -88,21 +94,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  app:
-    build: ../app
-    container_name: pandemetrix_app
-    restart: unless-stopped
-    ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_BASE_URL=http://localhost:5000
-      - CHOKIDAR_USEPOLLING=true # Required for hot reloading
-    volumes:
-      - ../app:/app
-      - pandemetrix_node_modules:/app/node_modules # let docker manage the volume
-    depends_on:
-      - api
   
   ia:
     build: ../Pandemetrix_ML
@@ -143,7 +134,4 @@ volumes:
   postgresql-metabase-data:
   postgresql-api-data:
   postgresql-raw-data:
-  pandemetrix_node_modules:
   pandemetrix_mongodb_data:
-
-#TODO: Ajouter les services Flask + variables d'environnement
